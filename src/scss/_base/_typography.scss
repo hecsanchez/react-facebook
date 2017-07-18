@@ -1,0 +1,26 @@
+// --------------------------------
+// TYPOGRAPHY
+// --------------------------------
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+
+a.link {
+    text-decoration: none;
+    color: $blue--light;
+}
+
+a.link:hover {
+    text-decoration: underline;
+}
+
+.login h1 {
+    font-size: 35px;
+    font-weight: 300;
+    color: $blue--light;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+}

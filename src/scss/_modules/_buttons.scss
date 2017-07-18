@@ -1,0 +1,32 @@
+// --------------------------------
+// BUTTONS
+// --------------------------------
+
+.button {
+    display: inline-block;
+    border: 0;
+    cursor: pointer;
+    max-width: 122px;
+    text-decoration: none;
+}
+
+.button--blue {
+    background: $blue--light;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: 1px;
+    padding: 15px 30px;
+}
+
+.button--alt {
+    font-size: 15px;
+    border: 1px solid $grey--light;
+    color: $grey--mid;
+    padding: 10px 15px;
+    transition: all .3s ease;
+}
+
+.button--alt:hover {
+    border: 1px solid $blue--light;
+    color: $blue--light;
+}
