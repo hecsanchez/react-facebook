@@ -1,7 +1,5 @@
 ![Screenshot](https://raw.githubusercontent.com/hectorsanchezmx/facebookapp/master/screenshot.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
-
 ## Available Scripts
 
 In the project directory, you can run:
