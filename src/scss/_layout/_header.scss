@@ -1,0 +1,88 @@
+.header {
+    border-bottom: 1px solid #f6f6f6;
+    box-shadow: 0 5px 10px 1px #f6f6f6;
+}
+
+.header .col-md-3:first-child {
+    border-right: 1px solid #f6f6f6;
+}
+
+.logo-container {
+    position: relative;
+}
+
+.caret {
+  position: relative;
+  top: -2px;
+}
+
+.caret:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-top: 5px solid #747474;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+
+.caret:after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  border-top: 5px solid #747474;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+
+.header .icon-facebook, .caret, .user-name, .toggle-trigger {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+span.user-name {
+    font-size: 13px;
+    color: #8a8a8a;
+    margin-right: 10px;
+}
+
+.toggle-trigger {
+    padding-left: 10px;
+    padding: 17px 0px 20px 10px;
+}
+
+.toggle {
+    opacity: 0;
+    transition: .3s ease all;
+    height: 0;
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    box-shadow: 0px 2px 10px 1px #ebebeb;
+    left: 0;
+    overflow: hidden;
+}
+
+.toggle-trigger:hover + .toggle, .toggle:hover {
+    opacity: 1;
+    height: 40px;
+}
+
+.toggle button {
+    border: 0;
+    background: 0;
+    font-size: 13px;
+    color: #8a8a8a;
+    font-weight: 300;
+    padding: 12px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: all .3s ease;
+}
+
+.toggle button:hover {
+    background: #f6f6f6;
+}

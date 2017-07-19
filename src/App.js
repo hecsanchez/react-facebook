@@ -35,11 +35,32 @@ const fakeAuth = {
 const AuthButton = withRouter(({ history }, { component: Component, ...rest }) => (
     <Route {...rest} render={props => (
       localStorage.user ? (
-          <p>
-            <button onClick={() => {
-              fakeAuth.signout(() => history.push('/'))
-            }}>Sign out</button>
-          </p>
+          <header className="header">
+              <div id="container" className="container-fluid">
+                  <div className="row">
+                      <div className="col col-md-3">
+                        <div className="logo-container">
+                            <span className="icon-facebook"></span>
+                            <div className="toggle-trigger">
+                                <span className="user-name">Hector Sánchez</span>
+                                <div className="caret"></div>
+                            </div>
+                            <div className="toggle">
+                              <button onClick={() => {
+                                fakeAuth.signout(() => history.push('/'))
+                              }}>Sign out</button>
+                            </div>
+                        </div>
+                      </div>
+                      <div className="col col-md-6">
+                          <div className="post-container">
+
+                          </div>
+                      </div>
+                      <div className="col col-md-3"></div>
+                  </div>
+              </div>
+          </header>
       ) : (
         <Redirect to={{
           pathname: '/login',
@@ -49,7 +70,59 @@ const AuthButton = withRouter(({ history }, { component: Component, ...rest }) =
     )}/>
 ))
 
-const Public = () => <h3>Public</h3>
+class Public extends React.Component {
+    constructor(props) {
+      super(props);
+      // This binding is necessary to make `this` work in the callback
+
+        localStorage.user ? (
+            console.log('All good')
+        ) : (
+          <Redirect to={{
+            pathname: '/login',
+            state: { from: props.location }
+          }}/>
+        )
+
+    }
+
+    post(event) {
+      event.preventDefault();
+      var post = {
+          email: email,
+          password: password
+      }
+
+    }
+
+    render() {
+
+      return (
+          <div id="container" className="container-fluid">
+              <div className="row">
+                  <div className="col col-md-3 full-height"></div>
+                  <div className="col col-md-6 full-height">
+                      <div className="post-container">
+                          <div className="avatar"><img src="img/avatar.jpeg" /></div>
+                          <form method="post" className="form--post" onSubmit={this.post}>
+                              <textarea className="post__content" placeholder="What's on your mind?"></textarea>
+                              <input type="file" className="input--file" name="file" />
+                              <label for="file" className="file-label"><img src="img/img.png" /></label>
+                              <input className="button button--round button--post" type="submit" value="Post" />
+                          </form>
+                      </div>
+                      <div className="posts-list">
+                        <div class="post">
+
+                        </div>
+                      </div>
+                    </div>
+                  <div className="col col-md-3"></div>
+              </div>
+          </div>
+      )
+    }
+}
 
 let email;
 let password;
