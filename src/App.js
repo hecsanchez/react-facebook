@@ -192,7 +192,7 @@ class Public extends React.Component {
           }}/>
         )
 
-        if (localStorage.posts.length > 0) {
+        if (localStorage.posts && localStorage.posts.length > 0) {
           console.log('localStorage', JSON.parse(localStorage.posts))
         } else {
           var posts = []
