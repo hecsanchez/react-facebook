@@ -26,7 +26,8 @@ const fakeAuth = {
     setTimeout(cb, 100) // fake async
   },
   signout(cb) {
-      localStorage.user = '';
+    localStorage.user = '';
+    localStorage.posts = '';
     this.isAuthenticated = false
     setTimeout(cb, 100)
   }
@@ -70,11 +71,52 @@ const AuthButton = withRouter(({ history }, { component: Component, ...rest }) =
     )}/>
 ))
 
+class Posts extends React.Component {
+  render() {
+      var content
+      // Loop through all the items
+      if (this.props.items.length > 0) {
+          console.log('this.props.items', this.props.items)
+        var posts = [...this.props.items];
+        posts.sort((a,b) => b.id - a.id);
+        content = posts.map(function(item, i) {
+          if (item.text && item.img ) {
+            return (
+              <div className="post" key={i}>
+                <div className="post__img">
+                  <img src={item.img}/>
+                </div>
+                <div className="post__text">
+                  <p>{item.text}</p>
+                </div>
+              </div>)
+          } else if (item.text && !item.img ) {
+            return (
+              <div className="post" key={i}>
+                <div className="post__text">
+                  <p>{item.text}</p>
+                </div>
+              </div>)
+          }
+
+        })
+      } else {
+        content = <div className="post" item="No content Available!" />
+      }
+
+      return (
+          <div className="posts">
+              {content}
+          </div>
+      )
+  }
+}
+
 class Public extends React.Component {
     constructor(props) {
       super(props);
-      // This binding is necessary to make `this` work in the callback
-
+        // This binding is necessary to make `this` work in the callback
+        this.state = {file: '',imagePreviewUrl: ''};
         localStorage.user ? (
             console.log('All good')
         ) : (
@@ -84,18 +126,76 @@ class Public extends React.Component {
           }}/>
         )
 
+        if (localStorage.posts.length > 0) {
+          console.log('localStorage', JSON.parse(localStorage.posts))
+        } else {
+          var posts = []
+          var post = {
+            "text": "",
+            "img": ""
+          }
+          posts.push(post)
+          localStorage.posts = JSON.stringify(posts)
+          console.log('No posts found on localStorage', JSON.parse(localStorage.posts))
+        }
+
     }
+
+    autoResize(e) {
+      // console.log(e);
+      e.target.style.overflowY = 'hidden'
+      e.target.style.height = 'auto'
+      e.target.style.height = e.target.scrollHeight+'px'
+      this.setState({
+        textpost: e.target.value,
+      });
+    }
+
+    _handleImageChange(e) {
+       e.preventDefault();
+
+       let reader = new FileReader();
+       let file = e.target.files[0];
+
+       reader.onloadend = () => {
+         this.setState({
+           file: file,
+           imagePreviewUrl: reader.result
+         });
+       }
+
+       reader.readAsDataURL(file)
+     }
 
     post(event) {
       event.preventDefault();
+      var newPosts = JSON.parse(localStorage.posts)
       var post = {
-          email: email,
-          password: password
+          "text":this.state.textpost,
+          "img": this.state.imagePreviewUrl,
+          "id": newPosts.length + 1
       }
+      this.setState({
+        recentPost: JSON.stringify(post),
+        textpost: null,
+        imagePreviewUrl: null
+      });
+      this.refs.text.value = '';
+
+      newPosts.push(post)
+      localStorage.posts = JSON.stringify(newPosts)
+      // console.log('posts', localStorage.posts)
 
     }
 
     render() {
+      let {imagePreviewUrl} = this.state;
+      let $imagePreview = null;
+      if (imagePreviewUrl) {
+        $imagePreview = (<img src={imagePreviewUrl} />);
+      } else {
+        $imagePreview = (<div></div>);
+      }
 
       return (
           <div id="container" className="container-fluid">
@@ -104,17 +204,22 @@ class Public extends React.Component {
                   <div className="col col-md-6 full-height">
                       <div className="post-container">
                           <div className="avatar"><img src="img/avatar.jpeg" /></div>
-                          <form method="post" className="form--post" onSubmit={this.post}>
-                              <textarea className="post__content" placeholder="What's on your mind?"></textarea>
-                              <input type="file" className="input--file" name="file" />
-                              <label for="file" className="file-label"><img src="img/img.png" /></label>
-                              <input className="button button--round button--post" type="submit" value="Post" />
+                          <form method="post" className="form--post" onSubmit={this.post.bind(this)}>
+                              <div className="textarea">
+                                <textarea className="post__content" placeholder="What's on your mind?" onInput={this.autoResize.bind(this)} ref="text"></textarea>
+                                <input type="file" className="input--file" name="file" id="file" onChange={(e)=>this._handleImageChange(e)}/>
+                                <div className="imgPreview">
+                                  {$imagePreview}
+                                </div>
+                              </div>
+                              <div className="button-group">
+                                  <label htmlFor="file" className="file-label button--round button--img"></label>
+                                  <button className="button button--round button--post" type="submit" value="Post"></button>
+                              </div>
                           </form>
                       </div>
                       <div className="posts-list">
-                        <div class="post">
-
-                        </div>
+                        <Posts items={localStorage.posts ? JSON.parse(localStorage.posts) : ''} />
                       </div>
                     </div>
                   <div className="col col-md-3"></div>
