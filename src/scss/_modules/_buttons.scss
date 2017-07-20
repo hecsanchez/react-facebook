@@ -10,6 +10,23 @@
     text-decoration: none;
 }
 
+.button:focus {
+  outline: none;
+}
+
+.button--round {
+    width: 50px;
+    height: 50px;
+    border-radius: 100px;
+    border: 1px solid #f8f6ff;
+    box-shadow: 0 0 10px 0px #ebeaee;
+    font-size: 0;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
 .button--blue {
     background: $blue--light;
     color: #fff;
@@ -29,4 +46,88 @@
 .button--alt:hover {
     border: 1px solid $blue--light;
     color: $blue--light;
+}
+
+.button--post {
+    background-color: #2989d8; /* Old browsers */
+    background-image: -moz-linear-gradient(45deg, #3b579d 0%, #2989d8 59%, #3892e9 100%); /* FF3.6-15 */
+    background-image: -webkit-linear-gradient(45deg, #3b579d 0%,#2989d8 59%,#3892e9 100%); /* Chrome10-25,Safari5.1-6 */
+    background-image: linear-gradient(45deg, #3b579d 0%,#2989d8 59%,#3892e9 100%);
+    background-position: 60%;
+    background-repeat: no-repeat;
+}
+
+.button--post:after {
+    content: '';
+    background: url(../img/send-button-white.svg) no-repeat;
+    width: 24px;
+    height: 24px;
+    display: block;
+    z-index: 999;
+    background-size: contain;
+    left: 20%;
+    position: relative;
+}
+
+.button--img {
+    background: #fff;
+}
+
+.button--img:hover, .button--privacy:hover {
+    background: #f6f6f6;
+}
+
+.button--img::after {
+    content: '';
+    background: url(../img/camera.svg) no-repeat;
+    width: 24px;
+    height: 24px;
+    display: block;
+    z-index: 999;
+    background-size: contain;
+    left: 27%;
+    position: relative;
+    top: 26%;
+}
+
+.button--privacy {
+  background: #fff;
+}
+
+.button--privacy:before {
+  content:'';
+  width: 20px;
+  height: 20px;
+  display: block;
+  background-size: contain !important;
+  margin: 0;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 2px;
+  left: -4px;
+  position: relative;
+}
+
+.button--Friends:before {
+  background: url(../img/friends.svg) no-repeat;
+}
+
+.button--Public:before {
+  background: url(../img/global.svg) no-repeat;
+}
+
+button .caret {
+    position: relative;
+    right: 4px;
+}
+
+.button--save {
+    position: absolute;
+    right: 8px;
+    bottom: -8px;
+    font-size: 15px;
+    width: 100px;
+    padding: 10px;
+    color: #fff;
+    background: #2e8cde;
 }

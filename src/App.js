@@ -72,11 +72,47 @@ const AuthButton = withRouter(({ history }, { component: Component, ...rest }) =
 ))
 
 class Posts extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log('this', this)
+    this.state = {
+      editing: ''
+    }
+  }
+
+  edit(e) {
+    console.log('this()', this)
+    this.state = {
+      editing: 'editing'
+    }
+  }
+
+  autoSave(e) {
+    this.state = {
+      textpost: e.target.value,
+    };
+  }
+
+  save(e) {
+    e.preventDefault()
+    this.state = {
+      editing: ''
+    }
+
+  }
+
+  remove(e) {
+    console.log('Delete()', e)
+  }
+
   render() {
-      var content
-      // Loop through all the items
+      var content;
+      var Posts = this;
+      var state = this.state.editing;
+
+      console.log('this.state', this.state)
       if (this.props.items.length > 0) {
-          console.log('this.props.items', this.props.items)
+          // console.log('this.props.items', this.props.items)
         var posts = [...this.props.items];
         posts.sort((a,b) => b.id - a.id);
         content = posts.map(function(item, i) {
@@ -86,9 +122,19 @@ class Posts extends React.Component {
                 <div className="post__img">
                   <img src={item.img}/>
                 </div>
-                <div className="post__text">
+                <div className="post__text" style={state === 'editing' ? {display:"none"} : {display:"block"}}>
                   <p>{item.text}</p>
                 </div>
+                <div className="post__textarea" style={state === '' ? {display:"none"} : {display:"block"}}>
+                  <form onSubmit={Posts.save}>
+                    <textarea ref="textarea" onInput={Posts.autoSave}>{item.text}</textarea>
+                    <button type="submit" className="button button--save">Update</button>
+                  </form>
+                </div>
+                <div className="actions">
+                 <a href="#" className="edit" onClick={Posts.edit(i)}>Edit</a>
+                 <a href="#" className="delete" onClick={Posts.remove(i)}>Delete</a>
+                 </div>
               </div>)
           } else if (item.text && !item.img ) {
             return (
@@ -96,8 +142,23 @@ class Posts extends React.Component {
                 <div className="post__text">
                   <p>{item.text}</p>
                 </div>
+                <div className="actions">
+                 <a href="#" className="edit" onClick={Posts.edit(i)}>Edit</a>
+                 <a href="#" className="delete" onClick={Posts.remove(i)}>Delete</a>
+                 </div>
               </div>)
-          }
+            } else if (item.img && !item.text ) {
+              return (
+                <div className="post" key={i}>
+                  <div className="post__img">
+                    <img src={item.img}/>
+                  </div>
+                  <div className="actions">
+                   <a href="#" className="edit" onClick={Posts.edit(i)}>Edit</a>
+                   <a href="#" className="delete" onClick={Posts.remove(i)}>Delete</a>
+                   </div>
+                </div>)
+            }
 
         })
       } else {
@@ -116,7 +177,12 @@ class Public extends React.Component {
     constructor(props) {
       super(props);
         // This binding is necessary to make `this` work in the callback
-        this.state = {file: '',imagePreviewUrl: ''};
+        this.state = {
+          file: '',
+          imagePreviewUrl: '',
+          buttonClass: "button button--round button--privacy button--Friends",
+          privacy: "Friends"
+        };
         localStorage.user ? (
             console.log('All good')
         ) : (
@@ -167,24 +233,38 @@ class Public extends React.Component {
        reader.readAsDataURL(file)
      }
 
+     selectPrivacy(e) {
+       var value = e.currentTarget.textContent
+       this.setState({
+         privacy: value,
+         buttonClass: "button button--round button--privacy button--" + e.currentTarget.textContent
+       });
+     }
+
     post(event) {
       event.preventDefault();
-      var newPosts = JSON.parse(localStorage.posts)
-      var post = {
-          "text":this.state.textpost,
-          "img": this.state.imagePreviewUrl,
-          "id": newPosts.length + 1
-      }
-      this.setState({
-        recentPost: JSON.stringify(post),
-        textpost: null,
-        imagePreviewUrl: null
-      });
-      this.refs.text.value = '';
+      if (this.state.textpost || this.state.imagePreviewUrl) {
+        var newPosts = JSON.parse(localStorage.posts)
+        var post = {
+            "text":this.state.textpost,
+            "img": this.state.imagePreviewUrl,
+            "id": newPosts.length + 1,
+            "privacy": this.state.privacy
+        }
+        this.setState({
+          recentPost: JSON.stringify(post),
+          textpost: null,
+          imagePreviewUrl: null
+        });
+        this.refs.text.value = '';
 
-      newPosts.push(post)
-      localStorage.posts = JSON.stringify(newPosts)
-      // console.log('posts', localStorage.posts)
+        newPosts.push(post)
+        localStorage.posts = JSON.stringify(newPosts)
+        // console.log('posts', localStorage.posts)
+
+      } else {
+        alert('There is no content to post')
+      }
 
     }
 
@@ -205,6 +285,7 @@ class Public extends React.Component {
                       <div className="post-container">
                           <div className="avatar"><img src="img/avatar.jpeg" /></div>
                           <form method="post" className="form--post" onSubmit={this.post.bind(this)}>
+
                               <div className="textarea">
                                 <textarea className="post__content" placeholder="What's on your mind?" onInput={this.autoResize.bind(this)} ref="text"></textarea>
                                 <input type="file" className="input--file" name="file" id="file" onChange={(e)=>this._handleImageChange(e)}/>
@@ -213,6 +294,11 @@ class Public extends React.Component {
                                 </div>
                               </div>
                               <div className="button-group">
+                                <button className={this.state.buttonClass}  name="privacy" value={this.state.privacy}><div className="caret"></div></button>
+                                <div className="select">
+                                  <div className={this.state.privacy === 'Friends' ? "option option--selected" : "option" } onClick={this.selectPrivacy.bind(this)}>Friends</div>
+                                  <div className={this.state.privacy === 'Public' ? "option option--selected" : "option" } onClick={this.selectPrivacy.bind(this)}>Public</div>
+                                </div>
                                   <label htmlFor="file" className="file-label button--round button--img"></label>
                                   <button className="button button--round button--post" type="submit" value="Post"></button>
                               </div>

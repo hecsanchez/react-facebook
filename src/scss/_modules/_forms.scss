@@ -52,3 +52,13 @@ form span {
 input.error {
     border: 1px solid #ff8787;
 }
+
+input.input--file {
+    display: none;
+}
+
+.button-group {
+    float: right;
+    position: relative;
+    top: -25px;
+}
